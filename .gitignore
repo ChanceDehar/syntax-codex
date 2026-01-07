@@ -1,0 +1,11 @@
+target/
+.idea/
+*.iml
+.vscode/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.DS_Store
+src/main/resources/firebase-config.json
