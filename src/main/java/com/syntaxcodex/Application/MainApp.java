@@ -5,14 +5,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class MainApp {
 
@@ -25,14 +23,14 @@ public class MainApp {
     public Scene createScene() {
         Button exitButton = new Button("×");
         exitButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 18px; " +
-                           "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 4px 10px; " +
-                           "-fx-border-radius: 3px; -fx-background-radius: 3px;");
+                           "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8px 12px; " +
+                           "-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-min-height: 38px;");
         exitButton.setOnAction(e -> System.exit(0));
 
         Button logoutButton = new Button("⎋");
         logoutButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 16px; " +
-                             "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6px 12px; " +
-                             "-fx-border-radius: 3px; -fx-background-radius: 3px;");
+                             "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8px 12px; " +
+                             "-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-min-height: 38px;");
         logoutButton.setOnAction(e -> {
             LoginScreen loginScreen = new LoginScreen(stage, () -> {
                 javafx.scene.Scene mainScene = createScene();
@@ -59,33 +57,105 @@ public class MainApp {
         });
 
         Button settingsButton = new Button("⚙");
-        settingsButton.getStyleClass().add("settings-button");
-        settingsButton.setOnAction(e -> showSettings());
+        settingsButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 16px; " +
+                               "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8px 12px; " +
+                               "-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-min-height: 38px;");
 
-        HBox topBar = new HBox(10);
-        topBar.setAlignment(Pos.TOP_RIGHT);
-        topBar.setPadding(new Insets(10, 15, 0, 0));
-        topBar.getChildren().addAll(logoutButton, settingsButton, exitButton);
+        // Tab buttons
+        Button searchTabButton = new Button("Search");
+        searchTabButton.getStyleClass().addAll("tab-button", "tab-button-selected");
+        searchTabButton.setMinHeight(38);
+        
+        Button createTabButton = new Button("Create");
+        createTabButton.getStyleClass().add("tab-button");
+        createTabButton.setMinHeight(38);
 
-        TabPane tabPane = new TabPane();
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        HBox tabsGroup = new HBox(15);
+        tabsGroup.setAlignment(Pos.CENTER);
+        tabsGroup.getChildren().addAll(searchTabButton, createTabButton);
 
-        Tab searchTab = new Tab("Search");
+        // Control buttons group
+        HBox controlButtonsGroup = new HBox(10);
+        controlButtonsGroup.setAlignment(Pos.CENTER);
+        controlButtonsGroup.getChildren().addAll(logoutButton, settingsButton, exitButton);
+
+        // Spacer to balance left side so tabs are truly centered
+        Region leftSpacer = new Region();
+        leftSpacer.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        leftSpacer.setMinWidth(0);
+        
+        // Bind spacer width to match control buttons width
+        leftSpacer.prefWidthProperty().bind(controlButtonsGroup.widthProperty());
+
+        // Combined top box with tabs centered and buttons on right
+        BorderPane combinedTopBox = new BorderPane();
+        combinedTopBox.setPadding(new Insets(10, 15, 10, 15));
+        combinedTopBox.setStyle(
+            "-fx-background-color: #ac722d;" +
+            "-fx-background-radius: 6px;" +
+            "-fx-border-color: #8B6F47;" +
+            "-fx-border-width: 1px;" +
+            "-fx-border-radius: 6px;"
+        );
+        combinedTopBox.setLeft(leftSpacer);
+        combinedTopBox.setCenter(tabsGroup);
+        combinedTopBox.setRight(controlButtonsGroup);
+
+        // Content area for tab views - in a box below buttons
+        StackPane contentArea = new StackPane();
+        contentArea.setStyle(
+            "-fx-background-color: #ac722d;" +
+            "-fx-background-radius: 6px;" +
+            "-fx-border-color: #8B6F47;" +
+            "-fx-border-width: 1px;" +
+            "-fx-border-radius: 6px;"
+        );
+        contentArea.setPadding(new Insets(20));
+        VBox.setVgrow(contentArea, Priority.ALWAYS); // Makes it fill remaining space
+        
         SearchView searchView = new SearchView();
-        searchTab.setContent(searchView.createView());
-
-        Tab createTab = new Tab("Create");
         CreateView createView = new CreateView();
-        createTab.setContent(createView.createView());
+        VBox settingsContent = createSettingsContent();
+        
+        contentArea.getChildren().add(searchView.createView());
+        
+        // Tab switching logic
+        searchTabButton.setOnAction(e -> {
+            searchTabButton.getStyleClass().add("tab-button-selected");
+            createTabButton.getStyleClass().remove("tab-button-selected");
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(searchView.createView());
+        });
+        
+        createTabButton.setOnAction(e -> {
+            createTabButton.getStyleClass().add("tab-button-selected");
+            searchTabButton.getStyleClass().remove("tab-button-selected");
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(createView.createView());
+        });
+        
+        // Settings button - shows settings content
+        settingsButton.setOnAction(e -> {
+            searchTabButton.getStyleClass().remove("tab-button-selected");
+            createTabButton.getStyleClass().remove("tab-button-selected");
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(createSettingsContent());
+        });
 
-        tabPane.getTabs().addAll(searchTab, createTab);
-
-        VBox contentBox = new VBox(15);
-        contentBox.setPadding(new Insets(30, 40, 30, 40));
-        contentBox.setMaxWidth(900);
-        contentBox.setMaxHeight(550);
-        contentBox.setStyle("-fx-background-color: transparent;");
-        contentBox.getChildren().addAll(topBar, tabPane);
+        // Main container with gold background
+        VBox mainContainer = new VBox(15); // 15px spacing between top box and content
+        mainContainer.setPadding(new Insets(15, 20, 15, 20)); // Same padding all around
+        mainContainer.setMaxWidth(1020);
+        mainContainer.setMaxHeight(700);
+        mainContainer.setStyle(
+            "-fx-background-color: #c99645;" +
+            "-fx-background-radius: 12px;" +
+            "-fx-border-color: #8B6F47;" +
+            "-fx-border-width: 2px;" +
+            "-fx-border-radius: 12px;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0, 0, 8);"
+        );
+        mainContainer.getChildren().addAll(combinedTopBox, contentArea);
 
         Image backgroundImage = new Image(getClass().getResourceAsStream("/MainBackground.png"));
         
@@ -115,12 +185,12 @@ public class MainApp {
             stage.setY(event.getScreenY() - yOffset[0]);
         });
 
-        contentBox.setOnMousePressed(event -> event.consume());
-        contentBox.setOnMouseDragged(event -> event.consume());
+        mainContainer.setOnMousePressed(event -> event.consume());
+        mainContainer.setOnMouseDragged(event -> event.consume());
 
-        root.getChildren().addAll(backgroundView, contentBox);
-        StackPane.setAlignment(contentBox, Pos.TOP_CENTER);
-        StackPane.setMargin(contentBox, new Insets(340, 0, 0, 0));
+        root.getChildren().addAll(backgroundView, mainContainer);
+        StackPane.setAlignment(mainContainer, Pos.TOP_CENTER);
+        StackPane.setMargin(mainContainer, new Insets(375, 0, 0, 0));
 
         Scene scene = new Scene(root, sceneWidth, sceneHeight);
         scene.setFill(Color.TRANSPARENT);
@@ -129,8 +199,26 @@ public class MainApp {
         return scene;
     }
 
-    private void showSettings() {
-        SettingsView settingsView = new SettingsView(stage);
-        stage.setScene(settingsView.createScene());
+    private VBox createSettingsContent() {
+        Label titleLabel = new Label("Settings");
+        titleLabel.getStyleClass().add("section-title");
+
+        Label infoLabel = new Label("Syntax Codex v1.0.0");
+        infoLabel.setStyle("-fx-text-fill: #3E2723; -fx-font-size: 14px;");
+
+        Label helpLabel = new Label("Help: Store and search your programming cheat sheets");
+        helpLabel.setStyle("-fx-text-fill: #3E2723; -fx-font-size: 14px;");
+        
+        Label descLabel = new Label("This application allows you to save code snippets and search through them easily.");
+        descLabel.setStyle("-fx-text-fill: #3E2723; -fx-font-size: 13px;");
+        descLabel.setWrapText(true);
+        descLabel.setMaxWidth(600);
+
+        VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(40));
+        layout.getChildren().addAll(titleLabel, infoLabel, helpLabel, descLabel);
+
+        return layout;
     }
 }
