@@ -1,11 +1,31 @@
+# =========================
+# Build outputs
+# =========================
 target/
+SyntaxCodex-Portable/
+
+# =========================
+# IDE / Editor files
+# =========================
 .idea/
 *.iml
 .vscode/
+
+# =========================
+# Compiled files
+# =========================
 *.class
 *.jar
 *.war
 *.ear
+
+# =========================
+# Logs & OS files
+# =========================
 *.log
 .DS_Store
+
+# =========================
+# Secrets / Config
+# =========================
 src/main/resources/firebase-config.json

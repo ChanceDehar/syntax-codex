@@ -1,5 +1,7 @@
 package com.syntaxcodex;
 
+import com.syntaxcodex.FirebaseService;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

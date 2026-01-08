@@ -56,11 +56,6 @@ public class MainApp {
             });
         });
 
-        Button settingsButton = new Button("⚙");
-        settingsButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 16px; " +
-                               "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8px 12px; " +
-                               "-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-min-height: 38px;");
-
         // Tab buttons
         Button searchTabButton = new Button("Search");
         searchTabButton.getStyleClass().addAll("tab-button", "tab-button-selected");
@@ -77,7 +72,7 @@ public class MainApp {
         // Control buttons group
         HBox controlButtonsGroup = new HBox(10);
         controlButtonsGroup.setAlignment(Pos.CENTER);
-        controlButtonsGroup.getChildren().addAll(logoutButton, settingsButton, exitButton);
+        controlButtonsGroup.getChildren().addAll(logoutButton, exitButton);
 
         // Spacer to balance left side so tabs are truly centered
         Region leftSpacer = new Region();
@@ -115,7 +110,6 @@ public class MainApp {
         
         SearchView searchView = new SearchView();
         CreateView createView = new CreateView();
-        VBox settingsContent = createSettingsContent();
         
         contentArea.getChildren().add(searchView.createView());
         
@@ -132,14 +126,6 @@ public class MainApp {
             searchTabButton.getStyleClass().remove("tab-button-selected");
             contentArea.getChildren().clear();
             contentArea.getChildren().add(createView.createView());
-        });
-        
-        // Settings button - shows settings content
-        settingsButton.setOnAction(e -> {
-            searchTabButton.getStyleClass().remove("tab-button-selected");
-            createTabButton.getStyleClass().remove("tab-button-selected");
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(createSettingsContent());
         });
 
         // Main container with gold background
@@ -197,28 +183,5 @@ public class MainApp {
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
         return scene;
-    }
-
-    private VBox createSettingsContent() {
-        Label titleLabel = new Label("Settings");
-        titleLabel.getStyleClass().add("section-title");
-
-        Label infoLabel = new Label("Syntax Codex v1.0.0");
-        infoLabel.setStyle("-fx-text-fill: #3E2723; -fx-font-size: 14px;");
-
-        Label helpLabel = new Label("Help: Store and search your programming cheat sheets");
-        helpLabel.setStyle("-fx-text-fill: #3E2723; -fx-font-size: 14px;");
-        
-        Label descLabel = new Label("This application allows you to save code snippets and search through them easily.");
-        descLabel.setStyle("-fx-text-fill: #3E2723; -fx-font-size: 13px;");
-        descLabel.setWrapText(true);
-        descLabel.setMaxWidth(600);
-
-        VBox layout = new VBox(20);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(40));
-        layout.getChildren().addAll(titleLabel, infoLabel, helpLabel, descLabel);
-
-        return layout;
     }
 }

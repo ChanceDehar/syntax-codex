@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 public class Config {
 
     private static String webApiKey;
+    private static String projectId;
 
     public static void initializeFirebase() {
         try {
@@ -20,6 +21,7 @@ public class Config {
             InputStreamReader reader = new InputStreamReader(serviceAccount);
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
             webApiKey = json.get("apiKey").getAsString();
+            projectId = json.get("projectId").getAsString();
             
             serviceAccount = Config.class.getClassLoader()
                 .getResourceAsStream("firebase-config.json");
@@ -38,5 +40,9 @@ public class Config {
 
     public static String getWebApiKey() {
         return webApiKey;
+    }
+
+    public static String getProjectId() {
+        return projectId;
     }
 }
