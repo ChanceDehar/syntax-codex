@@ -1,0 +1,96 @@
+.root {
+    -fx-background-color: #0a0a0a;
+    -fx-font-family: "Inter", "SF Pro Display", -apple-system, "Segoe UI", sans-serif;
+}
+
+.login-container {
+    -fx-background-color: #141414;
+    -fx-background-radius: 16px;
+    -fx-border-color: #1f1f1f;
+    -fx-border-width: 1px;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 40, 0, 0, 8);
+}
+
+.title-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 32px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: -0.5px;
+}
+
+.label {
+    -fx-text-fill: #a0a0a0;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.2px;
+}
+
+.text-field, .password-field {
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #4a4a4a;
+    -fx-border-color: #262626;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 14px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #3a3a3a;
+    -fx-background-color: #1f1f1f;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.05), 8, 0, 0, 0);
+}
+
+.button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #0a0a0a;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 14px 24px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.1), 12, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.15), 16, 0, 0, 4);
+}
+
+.button:pressed {
+    -fx-background-color: #e0e0e0;
+    -fx-translate-y: 1px;
+}
+
+.forgot-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #808080;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+    -fx-underline: false;
+    -fx-padding: 8px;
+}
+
+.forgot-button:hover {
+    -fx-text-fill: #ffffff;
+}
+
+.message-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-background-color: rgba(255, 107, 107, 0.1);
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 16px;
+}
+
+.message-label-success {
+    -fx-text-fill: #51cf66;
+    -fx-background-color: rgba(81, 207, 102, 0.1);
+}
