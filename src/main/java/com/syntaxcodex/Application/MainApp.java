@@ -6,9 +6,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainApp {
 
@@ -19,15 +21,20 @@ public class MainApp {
     }
 
     public Scene createScene() {
-        Button settingsButton = new Button("Settings");
+        Button exitButton = new Button("×");
+        exitButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 18px; " +
+                           "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 4px 10px; " +
+                           "-fx-border-radius: 3px; -fx-background-radius: 3px;");
+        exitButton.setOnAction(e -> System.exit(0));
+
+        Button settingsButton = new Button("⚙");
         settingsButton.getStyleClass().add("settings-button");
         settingsButton.setOnAction(e -> showSettings());
 
-        HBox topBar = new HBox();
-        topBar.getStyleClass().add("top-bar");
-        topBar.setPadding(new Insets(15, 20, 15, 20));
-        topBar.setAlignment(Pos.CENTER_RIGHT);
-        topBar.getChildren().add(settingsButton);
+        HBox topBar = new HBox(10);
+        topBar.setAlignment(Pos.TOP_RIGHT);
+        topBar.setPadding(new Insets(10, 15, 0, 0));
+        topBar.getChildren().addAll(settingsButton, exitButton);
 
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -42,12 +49,57 @@ public class MainApp {
 
         tabPane.getTabs().addAll(searchTab, createTab);
 
-        BorderPane root = new BorderPane();
-        root.getStyleClass().add("main-background");
-        root.setTop(topBar);
-        root.setCenter(tabPane);
+        VBox contentBox = new VBox(15);
+        contentBox.setPadding(new Insets(60, 40, 40, 40));
+        contentBox.setMaxWidth(900);
+        contentBox.setMaxHeight(650);
+        contentBox.setStyle("-fx-background-color: #D2B48C; " +
+                           "-fx-background-radius: 8px; " +
+                           "-fx-border-color: #8B6F47; " +
+                           "-fx-border-width: 2px; " +
+                           "-fx-border-radius: 8px;");
+        contentBox.getChildren().addAll(topBar, tabPane);
 
-        Scene scene = new Scene(root, 1100, 750);
+        Image backgroundImage = new Image(getClass().getResourceAsStream("/MainBackground.png"));
+        
+        double sceneWidth = backgroundImage.getWidth();
+        double sceneHeight = backgroundImage.getHeight();
+        
+        BackgroundImage bg = new BackgroundImage(
+            backgroundImage,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(sceneWidth, sceneHeight, false, false, false, false)
+        );
+
+        StackPane root = new StackPane();
+        root.setPrefSize(sceneWidth, sceneHeight);
+        root.setMinSize(sceneWidth, sceneHeight);
+        root.setMaxSize(sceneWidth, sceneHeight);
+        
+        final double[] xOffset = {0};
+        final double[] yOffset = {0};
+
+        root.setOnMousePressed(event -> {
+            xOffset[0] = event.getSceneX();
+            yOffset[0] = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset[0]);
+            stage.setY(event.getScreenY() - yOffset[0]);
+        });
+
+        contentBox.setOnMousePressed(event -> event.consume());
+        contentBox.setOnMouseDragged(event -> event.consume());
+
+        root.setBackground(new Background(bg));
+        root.getChildren().add(contentBox);
+        StackPane.setAlignment(contentBox, Pos.CENTER);
+
+        Scene scene = new Scene(root, sceneWidth, sceneHeight);
+        scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
         return scene;

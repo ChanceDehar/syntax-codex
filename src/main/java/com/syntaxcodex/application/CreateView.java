@@ -16,6 +16,7 @@ public class CreateView {
 
         Label phraseLabel = new Label("PHRASE");
         phraseLabel.getStyleClass().add("label");
+        
         TextField phraseField = new TextField();
         phraseField.setPromptText("e.g., Java Array Sort");
         phraseField.setPrefWidth(600);
@@ -23,6 +24,7 @@ public class CreateView {
 
         Label variablesLabel = new Label("VARIABLES (comma separated)");
         variablesLabel.getStyleClass().add("label");
+        
         TextField variablesField = new TextField();
         variablesField.setPromptText("e.g., java, array, sort");
         variablesField.setPrefWidth(600);
@@ -30,9 +32,10 @@ public class CreateView {
 
         Label contentLabel = new Label("CONTENT");
         contentLabel.getStyleClass().add("label");
+        
         TextArea contentArea = new TextArea();
         contentArea.setPromptText("Enter your code or notes here...");
-        contentArea.setPrefHeight(350);
+        contentArea.setPrefHeight(280);
         contentArea.setPrefWidth(600);
         contentArea.setMaxWidth(600);
         contentArea.setWrapText(true);
@@ -43,7 +46,7 @@ public class CreateView {
             System.out.println("Save clicked");
         });
 
-        VBox formContainer = new VBox(15);
+        VBox formContainer = new VBox(12);
         formContainer.getChildren().addAll(
             phraseLabel,
             phraseField,
@@ -56,11 +59,12 @@ public class CreateView {
 
         ScrollPane scrollPane = new ScrollPane(formContainer);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(580);
+        scrollPane.setPrefHeight(480);
+        scrollPane.setStyle("-fx-background: transparent; -fx-border-color: transparent;");
 
-        VBox layout = new VBox(25);
+        VBox layout = new VBox(20);
         layout.getStyleClass().add("content-area");
-        layout.setPadding(new Insets(40));
+        layout.setPadding(new Insets(20));
         layout.getChildren().addAll(titleLabel, scrollPane);
 
         return layout;
