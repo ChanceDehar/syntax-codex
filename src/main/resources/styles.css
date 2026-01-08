@@ -3,7 +3,6 @@
     -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* Tab buttons styling */
 .tab-button {
     -fx-background-color: #5C4033;
     -fx-text-fill: #D4AF37;
@@ -35,7 +34,6 @@
     -fx-font-weight: bold;
 }
 
-/* Scroll bar styling - darker like settings button */
 .scroll-pane {
     -fx-background-color: transparent;
 }
@@ -103,7 +101,6 @@
     -fx-text-fill: #3E2723;
 }
 
-/* TextArea - match TextField styling exactly */
 .text-area {
     -fx-background-color: #D2B48C;
     -fx-border-color: #8B6F47;
