@@ -25,8 +25,6 @@ public class LoginScreen {
     }
 
     public Scene createScene() {
-        stage.initStyle(StageStyle.TRANSPARENT);
-
         Button exitButton = new Button("×");
         exitButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 18px; " +
                            "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 4px 10px; " +

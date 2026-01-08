@@ -116,7 +116,7 @@
 }
 
 .tab {
-    -fx-background-color: #A89968;
+    -fx-background-color: transparent;
     -fx-background-radius: 6px 6px 0 0;
     -fx-border-color: #8B6F47;
     -fx-border-width: 1px 1px 0 1px;
@@ -125,7 +125,7 @@
 }
 
 .tab:selected {
-    -fx-background-color: #D2B48C;
+    -fx-background-color: rgba(139, 111, 71, 0.2);
 }
 
 .tab .tab-label {
@@ -139,15 +139,14 @@
 }
 
 .tab:hover {
-    -fx-background-color: #C5A572;
+    -fx-background-color: rgba(139, 111, 71, 0.1);
 }
 
 .tab-content-area {
-    -fx-background-color: #D2B48C;
+    -fx-background-color: transparent;
     -fx-background-radius: 0 0 6px 6px;
-    -fx-border-color: #8B6F47;
-    -fx-border-width: 0 1px 1px 1px;
-    -fx-border-radius: 0 0 6px 6px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
     -fx-padding: 20px;
 }
 
