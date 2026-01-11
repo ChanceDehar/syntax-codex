@@ -13,6 +13,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 public class SearchView {
 
@@ -170,95 +174,128 @@ public class SearchView {
     }
 
     private void showEditView(CheatSheet sheet) {
-        mainContainer.getChildren().clear();
-        
-        // Name field (75%) and Language dropdown (25%)
-        HBox topRow = new HBox(10);
-        topRow.setAlignment(Pos.CENTER_LEFT);
-        
-        TextField nameField = new TextField(sheet.name);
-        nameField.setPromptText("Name");
-        nameField.setStyle("-fx-background-color: #D2B48C; -fx-text-fill: #3E2723; -fx-prompt-text-fill: #6D4C41; " +
-                          "-fx-border-color: #8B6F47; -fx-border-radius: 4px; -fx-background-radius: 4px; " +
-                          "-fx-padding: 8px; -fx-font-size: 12px;");
-        HBox.setHgrow(nameField, Priority.ALWAYS);
-        nameField.setMaxWidth(Double.MAX_VALUE);
-        
-        ComboBox<String> languageDropdown = new ComboBox<>();
-        languageDropdown.setValue(sheet.language);
-        languageDropdown.setPrefWidth(150);
-        languageDropdown.getItems().addAll(
-            "Python", "C++", "Java", "JavaScript", "TypeScript", "Kotlin",
-            "C#", "Ruby", "Go", "Rust", "PHP", "Swift", "SQL", "HTML", "CSS", "Other"
-        );
-        
-        topRow.getChildren().addAll(nameField, languageDropdown);
-        
-        // Description area
-        TextArea descriptionArea = new TextArea(sheet.description);
-        descriptionArea.setPromptText("Description");
-        descriptionArea.setPrefHeight(80);
-        descriptionArea.setStyle("-fx-background-color: #D2B48C; -fx-text-fill: #3E2723; " +
-                                "-fx-prompt-text-fill: #6D4C41; -fx-border-color: #8B6F47; " +
-                                "-fx-border-radius: 4px; -fx-background-radius: 4px; " +
-                                "-fx-padding: 8px; -fx-font-size: 12px; -fx-border-width: 1px;");
-        
-        // Content area
-        TextArea contentArea = new TextArea(sheet.content);
-        contentArea.setPromptText("Content / Code");
-        contentArea.setStyle("-fx-background-color: #D2B48C; -fx-text-fill: #3E2723; " +
+    mainContainer.getChildren().clear();
+    
+    // Add return button to top bar
+    Button returnButton = new Button("←");
+    returnButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 18px; " +
+                         "-fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8px 12px; " +
+                         "-fx-border-radius: 3px; -fx-background-radius: 3px; -fx-min-height: 38px;");
+    returnButton.setOnAction(e -> showSearchView());
+    
+    HBox topBar = new HBox();
+    topBar.setAlignment(Pos.CENTER_LEFT);
+    topBar.setPadding(new Insets(0, 0, 10, 0));
+    topBar.getChildren().add(returnButton);
+    
+    // Name field (75%) and Language dropdown (25%)
+    HBox topRow = new HBox(10);
+    topRow.setAlignment(Pos.CENTER_LEFT);
+    
+    TextField nameField = new TextField(sheet.name);
+    nameField.setPromptText("Name");
+    nameField.setStyle("-fx-background-color: #D2B48C; -fx-text-fill: #3E2723; -fx-prompt-text-fill: #6D4C41; " +
+                      "-fx-border-color: #8B6F47; -fx-border-radius: 4px; -fx-background-radius: 4px; " +
+                      "-fx-padding: 8px; -fx-font-size: 12px;");
+    HBox.setHgrow(nameField, Priority.ALWAYS);
+    nameField.setMaxWidth(Double.MAX_VALUE);
+    
+    ComboBox<String> languageDropdown = new ComboBox<>();
+    languageDropdown.setValue(sheet.language);
+    languageDropdown.setPrefWidth(150);
+    languageDropdown.getItems().addAll(
+        "Python", "C++", "Java", "JavaScript", "TypeScript", "Kotlin",
+        "C#", "Ruby", "Go", "Rust", "PHP", "Swift", "SQL", "HTML", "CSS", "Other"
+    );
+    
+    topRow.getChildren().addAll(nameField, languageDropdown);
+    
+    // Description area
+    TextArea descriptionArea = new TextArea(sheet.description);
+    descriptionArea.setPromptText("Description");
+    descriptionArea.setPrefHeight(80);
+    descriptionArea.setStyle("-fx-background-color: #D2B48C; -fx-text-fill: #3E2723; " +
                             "-fx-prompt-text-fill: #6D4C41; -fx-border-color: #8B6F47; " +
                             "-fx-border-radius: 4px; -fx-background-radius: 4px; " +
-                            "-fx-padding: 8px; -fx-font-size: 12px; " +
-                            "-fx-font-family: 'Consolas', 'Monaco', monospace; -fx-border-width: 1px;");
-        VBox.setVgrow(contentArea, Priority.ALWAYS);
+                            "-fx-padding: 8px; -fx-font-size: 12px; -fx-border-width: 1px;");
+    
+    // Content area
+    TextArea contentArea = new TextArea(sheet.content);
+    contentArea.setPromptText("Content / Code");
+    contentArea.setStyle("-fx-background-color: #D2B48C; -fx-text-fill: #3E2723; " +
+                        "-fx-prompt-text-fill: #6D4C41; -fx-border-color: #8B6F47; " +
+                        "-fx-border-radius: 4px; -fx-background-radius: 4px; " +
+                        "-fx-padding: 8px; -fx-font-size: 12px; " +
+                        "-fx-font-family: 'Consolas', 'Monaco', monospace; -fx-border-width: 1px;");
+    VBox.setVgrow(contentArea, Priority.ALWAYS);
+    
+    // Buttons
+    HBox buttonBox = new HBox(15);
+    buttonBox.setAlignment(Pos.CENTER);
+    
+    Button copyButton = new Button("Copy Content");
+    copyButton.setPrefWidth(150);
+    copyButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 13px; " +
+                       "-fx-font-weight: bold; -fx-padding: 10px 24px; -fx-border-radius: 4px; " +
+                       "-fx-background-radius: 4px; -fx-cursor: hand;");
+    
+    Button saveButton = new Button("Save Changes");
+    saveButton.setPrefWidth(150);
+    saveButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 13px; " +
+                       "-fx-font-weight: bold; -fx-padding: 10px 24px; -fx-border-radius: 4px; " +
+                       "-fx-background-radius: 4px; -fx-cursor: hand;");
+    
+    Button deleteButton = new Button("Delete");
+    deleteButton.setPrefWidth(150);
+    deleteButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 13px; " +
+                         "-fx-font-weight: bold; -fx-padding: 10px 24px; -fx-border-radius: 4px; " +
+                         "-fx-background-radius: 4px; -fx-cursor: hand;");
+    
+    buttonBox.getChildren().addAll(copyButton, saveButton, deleteButton);
+    
+    // Copy button action
+    copyButton.setOnAction(e -> {
+        javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+        javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+        content.putString(contentArea.getText());
+        clipboard.setContent(content);
         
-        // Buttons
-        HBox buttonBox = new HBox(15);
-        buttonBox.setAlignment(Pos.CENTER);
+        // Optional: Visual feedback that content was copied
+        String originalText = copyButton.getText();
+        copyButton.setText("Copied!");
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1.5));
+        pause.setOnFinished(ev -> copyButton.setText(originalText));
+        pause.play();
+    });
+    
+    // Save button action
+    saveButton.setOnAction(e -> {
+        boolean success = updateCheatSheetInFirebase(
+            sheet.id,
+            nameField.getText(),
+            languageDropdown.getValue(),
+            descriptionArea.getText(),
+            contentArea.getText()
+        );
         
-        Button saveButton = new Button("Save Changes");
-        saveButton.setPrefWidth(150);
-        saveButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 13px; " +
-                           "-fx-font-weight: bold; -fx-padding: 10px 24px; -fx-border-radius: 4px; " +
-                           "-fx-background-radius: 4px; -fx-cursor: hand;");
+        if (success) {
+            showSearchView(); // Reload search view
+            if (onUpdate != null) onUpdate.run();
+        }
+    });
+    
+    // Delete button action
+    deleteButton.setOnAction(e -> {
+        boolean success = deleteCheatSheetFromFirebase(sheet.id);
         
-        Button deleteButton = new Button("Delete");
-        deleteButton.setPrefWidth(150);
-        deleteButton.setStyle("-fx-background-color: #5C4033; -fx-text-fill: #D4AF37; -fx-font-size: 13px; " +
-                             "-fx-font-weight: bold; -fx-padding: 10px 24px; -fx-border-radius: 4px; " +
-                             "-fx-background-radius: 4px; -fx-cursor: hand;");
-        
-        buttonBox.getChildren().addAll(saveButton, deleteButton);
-        
-        // Save button action
-        saveButton.setOnAction(e -> {
-            boolean success = updateCheatSheetInFirebase(
-                sheet.id,
-                nameField.getText(),
-                languageDropdown.getValue(),
-                descriptionArea.getText(),
-                contentArea.getText()
-            );
-            
-            if (success) {
-                showSearchView(); // Reload search view
-                if (onUpdate != null) onUpdate.run();
-            }
-        });
-        
-        // Delete button action
-        deleteButton.setOnAction(e -> {
-            boolean success = deleteCheatSheetFromFirebase(sheet.id);
-            
-            if (success) {
-                showSearchView(); // Reload search view
-                if (onUpdate != null) onUpdate.run();
-            }
-        });
-        
-        mainContainer.getChildren().addAll(topRow, descriptionArea, contentArea, buttonBox);
-    }
+        if (success) {
+            showSearchView(); // Reload search view
+            if (onUpdate != null) onUpdate.run();
+        }
+    });
+    
+    mainContainer.getChildren().addAll(topBar, topRow, descriptionArea, contentArea, buttonBox);
+}
 
     private List<CheatSheet> fetchCheatSheetsFromFirebase() {
         List<CheatSheet> sheets = new ArrayList<>();
@@ -277,7 +314,7 @@ public class SearchView {
                 .GET();
             
             // Add auth token
-            String authToken = com.syntaxcodex.FirebaseService.getAuthToken();
+            String authToken = com.syntaxcodex.service.FirebaseService.getAuthToken();
             if (authToken != null && !authToken.isEmpty()) {
                 requestBuilder.header("Authorization", "Bearer " + authToken);
             }
@@ -360,7 +397,7 @@ public class SearchView {
                 .method("PATCH", HttpRequest.BodyPublishers.ofString(document.toString()));
             
             // Add auth token
-            String authToken = com.syntaxcodex.FirebaseService.getAuthToken();
+            String authToken = com.syntaxcodex.service.FirebaseService.getAuthToken();
             if (authToken != null && !authToken.isEmpty()) {
                 requestBuilder.header("Authorization", "Bearer " + authToken);
             }
@@ -396,7 +433,7 @@ public class SearchView {
                 .DELETE();
             
             // Add auth token
-            String authToken = com.syntaxcodex.FirebaseService.getAuthToken();
+            String authToken = com.syntaxcodex.service.FirebaseService.getAuthToken();
             if (authToken != null && !authToken.isEmpty()) {
                 requestBuilder.header("Authorization", "Bearer " + authToken);
             }

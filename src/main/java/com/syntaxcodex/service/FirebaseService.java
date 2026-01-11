@@ -1,5 +1,6 @@
-package com.syntaxcodex;
+package com.syntaxcodex.service;
 
+import com.syntaxcodex.Config;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.gson.JsonObject;
@@ -16,7 +17,7 @@ public class FirebaseService {
     private static final String RESET_URL = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=";
     private static final String FIRESTORE_URL = "https://firestore.googleapis.com/v1/projects/";
     
-    private static String authToken; // Store the auth token
+    private static String authToken; 
 
     public static boolean login(String email, String password) {
         try {
@@ -36,7 +37,6 @@ public class FirebaseService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             
             if (response.statusCode() == 200) {
-                // Parse response to get the idToken
                 JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
                 authToken = responseJson.get("idToken").getAsString();
                 System.out.println("Login successful for: " + email);
@@ -84,7 +84,6 @@ public class FirebaseService {
         try {
             HttpClient client = HttpClient.newHttpClient();
             
-            // Build Firestore document structure
             JsonObject fields = new JsonObject();
             
             JsonObject nameField = new JsonObject();
@@ -112,13 +111,11 @@ public class FirebaseService {
             
             String firestoreUrl = FIRESTORE_URL + Config.getProjectId() + "/databases/(default)/documents/cheatsheets?key=" + Config.getWebApiKey();
             
-            // Build request with Authorization header
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(firestoreUrl))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(document.toString()));
             
-            // Add auth token if available
             if (authToken != null && !authToken.isEmpty()) {
                 requestBuilder.header("Authorization", "Bearer " + authToken);
             }
@@ -140,7 +137,6 @@ public class FirebaseService {
         }
     }
     
-    // Getter for auth token
     public static String getAuthToken() {
         return authToken;
     }

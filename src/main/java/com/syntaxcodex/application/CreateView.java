@@ -1,5 +1,6 @@
 package com.syntaxcodex.application;
 
+import com.syntaxcodex.service.FirebaseService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -168,6 +169,6 @@ public class CreateView {
     
     // Save to Firebase Firestore
     private boolean saveToFirebase(String name, String language, String description, String content) {
-        return com.syntaxcodex.FirebaseService.saveCheatSheet(name, language, description, content);
+        return FirebaseService.saveCheatSheet(name, language, description, content);
     }
 }

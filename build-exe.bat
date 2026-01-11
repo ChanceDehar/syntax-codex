@@ -5,7 +5,7 @@ echo ========================================
 echo.
 
 echo [1/2] Building with Maven...
-call mvn clean package
+call mvn package
 if %ERRORLEVEL% NEQ 0 (
     echo ERROR: Build failed!
     pause
@@ -15,8 +15,19 @@ echo.
 
 echo [2/2] Creating portable app...
 
+REM Delete existing desktop shortcut if it exists
+if exist "%USERPROFILE%\Desktop\Syntax Codex.lnk" (
+    echo Deleting existing desktop shortcut...
+    del "%USERPROFILE%\Desktop\Syntax Codex.lnk"
+)
+
+REM Delete existing portable directory if it exists
+if exist "SyntaxCodex-Portable" (
+    echo Deleting existing portable directory...
+    rd /s /q SyntaxCodex-Portable
+)
+
 REM Create portable directory
-if exist "SyntaxCodex-Portable" rd /s /q SyntaxCodex-Portable
 mkdir SyntaxCodex-Portable\app
 
 REM Copy JAR and all dependencies
@@ -83,10 +94,9 @@ echo BUILD COMPLETE!
 echo ========================================
 echo.
 echo Your app is ready in: SyntaxCodex-Portable\
-echo Desktop shortcut created with custom icon.
+echo Desktop shortcut created: Syntax Codex
 echo.
-
-cd SyntaxCodex-Portable
-call SyntaxCodex-Debug.bat
+echo Run SyntaxCodex.bat or use the desktop shortcut to launch the app.
+echo.
 
 pause

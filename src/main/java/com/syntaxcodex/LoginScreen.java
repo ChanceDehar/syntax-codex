@@ -1,7 +1,8 @@
 package com.syntaxcodex;
 
-import com.syntaxcodex.FirebaseService;
+import com.syntaxcodex.service.FirebaseService;
 
+import com.syntaxcodex.Config;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class LoginScreen {
 
