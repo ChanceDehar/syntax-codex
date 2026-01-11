@@ -86,9 +86,9 @@ public class MainApp {
         BorderPane combinedTopBox = new BorderPane();
         combinedTopBox.setPadding(new Insets(10, 15, 10, 15));
         combinedTopBox.setStyle(
-            "-fx-background-color: #ac722d;" +
+            "-fx-background-color: #c99645;" +
             "-fx-background-radius: 6px;" +
-            "-fx-border-color: #8B6F47;" +
+            "-fx-border-color: #c99645;" +
             "-fx-border-width: 1px;" +
             "-fx-border-radius: 6px;"
         );
@@ -99,9 +99,9 @@ public class MainApp {
         // Content area for tab views - in a box below buttons
         StackPane contentArea = new StackPane();
         contentArea.setStyle(
-            "-fx-background-color: #ac722d;" +
+            "-fx-background-color: #c99645;" +
             "-fx-background-radius: 6px;" +
-            "-fx-border-color: #8B6F47;" +
+            "-fx-border-color: #c99645;" +
             "-fx-border-width: 1px;" +
             "-fx-border-radius: 6px;"
         );
